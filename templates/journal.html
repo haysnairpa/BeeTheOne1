@@ -1,0 +1,130 @@
+{% extends "base_layout.html" %}
+
+{% block title %}BeeTheOne - Jurnal{% endblock %}
+
+{% block content %}
+    <h1>Jurnal</h1>
+    {% if messages %}
+    <div style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <p>Daftar entri jurnal akuntansi.</p>
+    <div class="journal-section">
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Tanggal</th>
+                    <th>Keterangan</th>
+                    <th>Akun</th>
+                    <th>Debit</th>
+                    <th>Kredit</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set current_transaction = '' %}
+                {% set transaction_no = 0 %}
+                {% for entry in journal_entries %}
+                    {% if entry.keterangan != current_transaction %}
+                        {% set current_transaction = entry.keterangan %}
+                        {% set transaction_no = transaction_no + 1 %}
+                        <tr class="transaction-separator">
+                            <td>{{ transaction_no }}</td>
+                            <td>{{ entry.tanggal }}</td>
+                            <td>{{ entry.keterangan }}</td>
+                            <td>{{ entry.akun }}</td>
+                            <td>{{ entry.debit|safe_currency }}</td>
+                            <td>{{ entry.kredit|safe_currency }}</td>
+                            <td><a href="/delete_journal/{{ entry.row_id }}" class="delete-btn">Hapus</a></td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ entry.akun }}</td>
+                            <td>Rp {{ "{:,.0f}".format(entry.debit).replace(',', '.') if entry.debit else '' }}</td>
+                            <td>Rp {{ "{:,.0f}".format(entry.kredit).replace(',', '.') if entry.kredit else '' }}</td>
+                            <td><a href="/delete_journal/{{ entry.row_id }}" class="delete-btn">Hapus</a></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <a href="/input_transaksi" class="input-btn">Input Transaksi</a>
+{% endblock %}
+
+<style>
+    /* Styles specific to journal page */
+    h1 {
+        color: #B8860B;
+        font-family: 'Roca One', cursive;
+        font-weight: bold;
+        font-size: 3em;
+        margin-bottom: 25px;
+        user-select: none;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+    }
+    .journal-section table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .journal-section th, .journal-section td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+    .journal-section th {
+        background: linear-gradient(135deg, #FFD700, #FFA500);
+        color: #333;
+        font-weight: bold;
+    }
+    .journal-section tr:nth-child(even) {
+        background-color: rgba(255, 215, 0, 0.1);
+    }
+    .transaction-separator {
+        border-top: 3px solid #FFD700;
+    }
+    .input-btn {
+        margin-top: 20px;
+        background: linear-gradient(135deg, #FFA500, #FF8C00);
+        padding: 15px 30px;
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        display: inline-block;
+    }
+    .input-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+    .delete-btn {
+        background: linear-gradient(135deg, #FF4500, #DC143C);
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 12px;
+        font-weight: bold;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .delete-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+</style>

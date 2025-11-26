@@ -1,0 +1,173 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Laporan Laba Rugi{% endblock %}
+
+{% block head_extra %}
+<link href="https://fonts.googleapis.com/css2?family=Roca+One:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+    body, .container {
+        font-family: 'Roca One', cursive;
+        font-weight: 700;
+    }
+    .container {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 50px;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        width: 90%;
+        margin: 0 auto;
+    }
+    h1 {
+        color: #FFD700;
+        font-size: 3em;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    }
+    .bee-icon {
+        font-size: 4em;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        border: 2px solid #333;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    th, td {
+        padding: 12px;
+        border: 1px solid #ddd;
+    }
+    th {
+        background-color: #FFD700;
+        color: #333;
+        font-weight: bold;
+        text-align: center;
+    }
+    td:nth-child(1) {
+        text-align: left;
+    }
+    td:nth-child(2) {
+        text-align: right;
+    }
+    tbody tr:nth-child(odd):not(.section-header):not(.total-row) {
+        background-color: #f9f9f9;
+    }
+    .total-row {
+        font-weight: bold;
+        background-color: #FFA500;
+        color: white;
+        text-align: left;
+    }
+    .section-header {
+        background-color: #FFD700;
+        color: #333;
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.1em;
+    }
+    .back-btn {
+        margin-top: 30px;
+        background: linear-gradient(135deg, #FFA500, #FF8C00);
+        padding: 15px 30px;
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        display: inline-block;
+        text-align: center;
+    }
+    .back-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="bee-icon">🐝</div>
+    <h1>Laba Rugi</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Keterangan</th>
+                <th>Jumlah</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="section-header">
+                <td colspan="2">Pendapatan</td>
+            </tr>
+            {% for name, amount in revenues.items() %}
+            <tr>
+                <td>{{ name }}</td>
+                <td>{{ amount }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="total-row">
+                <td><strong>Total Pendapatan</strong></td>
+                <td><strong>{{ total_revenue }}</strong></td>
+            </tr>
+            <tr class="section-header">
+                <td colspan="2">Retur Penjualan</td>
+            </tr>
+            {% for name, amount in sales_returns.items() %}
+            <tr>
+                <td>{{ name }}</td>
+                <td>{{ amount }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="total-row">
+                <td><strong>Total Retur Penjualan</strong></td>
+                <td><strong>{{ total_sales_returns }}</strong></td>
+            </tr>
+            <tr class="total-row">
+                <td><strong>Penjualan Bersih</strong></td>
+                <td><strong>{{ net_sales }}</strong></td>
+            </tr>
+            <tr class="section-header">
+                <td colspan="2">Harga Pokok Penjualan</td>
+            </tr>
+            {% for name, amount in cogs.items() %}
+            <tr>
+                <td>{{ name }}</td>
+                <td>{{ amount }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="total-row">
+                <td><strong>Total Harga Pokok Penjualan</strong></td>
+                <td><strong>{{ total_cogs }}</strong></td>
+            </tr>
+            <tr class="total-row">
+                <td><strong>Laba Kotor</strong></td>
+                <td><strong>{{ gross_profit }}</strong></td>
+            </tr>
+            <tr class="section-header">
+                <td colspan="2">Biaya</td>
+            </tr>
+            {% for name, amount in expenses.items() %}
+            <tr>
+                <td>{{ name }}</td>
+                <td>{{ amount }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="total-row">
+                <td><strong>Total Biaya</strong></td>
+                <td><strong>{{ total_expenses }}</strong></td>
+            </tr>
+            <tr class="total-row">
+                <td><strong>Laba Bersih</strong></td>
+                <td><strong>{{ net_profit }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="/financial_reports" class="back-btn">Kembali ke Laporan Keuangan</a>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jurnal Penutup</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .error-message {
+            color: red;
+            margin-bottom: 20px;
+        }
+        .success-message {
+            color: green;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jurnal Penutup</h1>
+    {% if error %}
+        <div class="error-message">{{ error }}</div>
+    {% endif %}
+    {% if message %}
+        <div class="success-message">{{ message }}</div>
+    {% endif %}
+    <form method="post">
+        <button type="submit">Buat Jurnal Penutup</button>
+    </form>
+
+    {% if saldo_closing_accounts %}
+    <h2>Saldo Akun Pendapatan dan Beban</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>No Akun</th>
+                <th>Nama Akun</th>
+                <th>Saldo Debit</th>
+                <th>Saldo Kredit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in saldo_closing_accounts %}
+            <tr>
+                <td>{{ item.no_akun }}</td>
+                <td>{{ item.nama_akun }}</td>
+                <td>{{ item.debit | safe_currency }}</td>
+                <td>{{ item.kredit | safe_currency }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    {% if closing_entries %}
+    <h2>Jurnal Penutup yang Dibuat</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Akun</th>
+                <th>Debit</th>
+                <th>Kredit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in closing_entries %}
+            <tr>
+                <td>{{ entry.akun }}</td>
+                <td>{{ entry.debit | safe_currency }}</td>
+                <td>{{ entry.kredit | safe_currency }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <p><a href="{{ url_for('dashboard') }}">Kembali ke Dashboard</a></p>
+</body>
+</html>

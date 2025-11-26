@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BeeTheOne - Laporan Posisi Keuangan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff8dc;
+            color: #333;
+            margin: 0;
+            padding: 0 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #b8860b;
+            margin-top: 30px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 30px auto;
+            box-shadow: 0 0 10px rgba(184,134,11, 0.3);
+        }
+        th, td {
+            border: 1px solid #daa520;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #b8860b;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #fffacd;
+        }
+        tr:hover {
+            background-color: #ffe4b5;
+        }
+        .nominal {
+            text-align: right;
+            font-weight: bold;
+            color: #556b2f;
+        }
+        .back-btn {
+            display: block;
+            width: 180px;
+            margin: 20px auto 40px auto;
+            padding: 12px 0;
+            background-color: #b8860b;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+            transition: background-color 0.3s ease;
+        }
+        .back-btn:hover {
+            background-color: #d2b48c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Laporan Posisi Keuangan</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>No Akun</th>
+                <th>Nama Akun</th>
+                <th>Nominal (Rp)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in simple_data %}
+            <tr>
+                <td>{{ item.no_akun }}</td>
+                <td>{{ item.nama_akun }}</td>
+                <td class="nominal">{{ "{:,.0f}".format(item.nominal).replace(',', '.') if item.nominal is not none else "0" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/financial_reports" class="back-btn">Kembali ke Laporan Keuangan</a>
+</body>
+</html>

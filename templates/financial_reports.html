@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu Laporan Keuangan</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            margin: 0;
+            padding: 0;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+        }
+        .sidebar-container {
+            flex: 0 0 250px; /* match sidebar width */
+        }
+        .content-container {
+            flex: 1;
+            padding: 40px 50px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            margin: 20px;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #B8860B;
+            font-size: 3em;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+            user-select: none;
+        }
+        a.report-btn {
+            display: block;
+            margin: 15px 0;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: black;
+            font-weight: bold;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        a.report-btn:hover {
+            background: linear-gradient(135deg, #FFA500, #FFD700);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            color: black;
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar-container">
+        {% include '_sidebar.html' %}
+    </div>
+    <div class="content-container">
+        <div class="container">
+            <h1>Menu Laporan Keuangan</h1>
+            <a href="/laporan_posisi_keuangan_detail" class="report-btn">Laporan Posisi Keuangan</a>
+            <a href="/laba_rugi" class="report-btn">Laporan Laba Rugi</a>
+            <a href="/laporan_perubahan_ekuitas" class="report-btn">Laporan Perubahan Ekuitas</a>
+        </div>
+    </div>
+</body>
+</html>

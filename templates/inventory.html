@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeeTheOne - Inventory</title>
+    <style>
+        body {
+            font-family: 'Roca One';
+            font-weight: bold;
+            background: linear-gradient(135deg, #ffc400, #FFA500);
+            margin: 0;
+            padding: 0;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .main-content {
+            flex: 1;
+            padding: 50px;
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .main-content.sidebar-closed {
+            margin-left: 0;
+        }
+        .logo {
+            margin-bottom: 20px;
+        }
+        .logo img {
+            width: 100px;
+            height: auto;
+        }
+        .bee-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            width: 100%;
+            text-align: left;
+        }
+        .inventory-image {
+            width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #FFD700;
+            text-align: left;
+        }
+        th {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #FFF8DC;
+        }
+        .stock-link {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .stock-link:hover {
+            text-decoration: underline;
+            color: #004499;
+        }
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #FFA500, #FF8C00);
+            padding: 15px 30px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        .data-source {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    {% include '_sidebar.html' %}
+    <div class="main-content">
+        <div class="container">
+            <img src="{{ url_for('static', filename='inventory.png') }}" alt="Inventory Image" class="inventory-image">
+            <h1>Inventory Persediaan</h1>
+            <p>Data persediaan dari database Excel.</p>
+            
+            <div class="data-source">
+                <strong>Data Source:</strong> databasesia.xlsx - Sheet: Inventory
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>No Item</th>
+                        <th>Jenis Madu</th>
+                        <th>Stok Tersisa</th>
+                        <th>Harga Pokok</th>
+                        <th>Harga Jual</th>
+                        <th>Gross Profit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set total_stock = 0 %}
+                    {% set total_cost = 0 %}
+                    {% set total_selling = 0 %}
+                    {% set total_gross_profit = 0 %}
+                    {% for item in inventory_data %}
+                    <tr>
+                        <td>{{ item.item_code }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>
+                            <span class="stock-link" title="Data dari Excel: Stock Remaining">
+                                {{ item.stock }}
+                            </span>
+                        </td>
+                        <td>Rp {{ "{:,.0f}".format(item.cost_price_stock) }}</td>
+                        <td>Rp {{ "{:,.0f}".format(item.selling_price_stock) }}</td>
+                        <td>Rp {{ "{:,.0f}".format((item.selling_price_stock - item.cost_price_stock)) }}</td>
+                    </tr>
+                    {% set total_stock = total_stock + item.stock %}
+                    {% set total_cost = total_cost + (item.cost_price * item.stock) %}
+                    {% set total_selling = total_selling + (item.selling_price * item.stock) %}
+                    {% set total_gross_profit = total_gross_profit + ((item.selling_price - item.cost_price) * item.stock) %}
+                    {% endfor %}
+                    
+                    <!-- Total Row -->
+                    <tr style="font-weight: bold; background-color:#FFD700;">
+                        <td><b>Total</b></td>
+                        <td></td>
+                        <td><b>{{ inventory_data | sum(attribute='stock') }}</b></td>
+<td><b>Rp {{ "{:,.0f}".format(total_cost_price_stock) }}</b></td>
+<td><b>Rp {{ "{:,.0f}".format(inventory_data | sum(attribute='selling_price_stock')) }}</b></td>
+<td>
+    <b>Rp {{ "{:,.0f}".format(
+        (inventory_data | sum(attribute='selling_price_stock')) 
+        - total_cost_price_stock
+    ) }}</b>
+</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <a href="/dashboard" class="back-btn">Kembali ke Dashboard</a>
+
+    <script>
+        // Tambahkan event listener untuk menampilkan info saat hover di kolom stok
+        document.addEventListener('DOMContentLoaded', function() {
+            const stockCells = document.querySelectorAll('.stock-link');
+            
+            stockCells.forEach(cell => {
+                cell.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = '#e6f3ff';
+                });
+                
+                cell.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                });
+                
+                // Optional: Klik untuk melihat detail lebih lanjut
+                cell.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const itemCode = row.cells[0].textContent;
+                    const itemName = row.cells[1].textContent;
+                    const stock = this.textContent;
+                    
+                    alert(`Detail Stok:\n\nKode: ${itemCode}\nNama: ${itemName}\nStok Tersisa: ${stock}\n\nData ini diambil langsung dari file Excel databasesia.xlsx`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

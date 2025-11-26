@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeeTheOne - Input Transaksi</title>
+    <style>
+        /* CSS yang sudah ada tetap sama */
+        body {
+            font-family: 'Roca One';
+            font-weight: bold;
+            background: linear-gradient(135deg, #ffc400, #FFA500);
+            margin: 0;
+            padding: 0;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar {
+            width: 250px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        .sidebar.closed {
+            transform: translateX(-100%);
+        }
+        .toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1001;
+            font-size: 18px;
+        }
+        .main-content {
+            flex: 1;
+            padding: 50px;
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .main-content.sidebar-closed {
+            margin-left: 0;
+        }
+        .logo {
+            margin-bottom: 20px;
+        }
+        .logo img {
+            width: 100px;
+            height: auto;
+        }
+        .bee-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+        }
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #FFA500, #FFD700);
+            color: #000;
+        }
+        .logout-btn {
+            margin-top: auto;
+            background: linear-gradient(135deg, #FFA500, #FF8C00);
+            padding: 15px 30px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            width: 100%;
+            text-align: left;
+        }
+        h1 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+        label {
+            font-weight: bold;
+            text-align: left;
+        }
+        input[type="date"], input[type="text"], input[type="number"], select {
+            padding: 15px;
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            font-size: 16px;
+            background: #FFF8DC;
+            transition: border-color 0.3s ease;
+        }
+        input[type="date"]:focus, input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #FFA500;
+        }
+        .debit-kredit {
+            display: flex;
+            gap: 10px;
+        }
+        .debit-kredit div {
+            flex: 1;
+        }
+        .akun-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .akun-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .akun-row label {
+            flex: 1;
+            min-width: 120px;
+        }
+        .akun-row select, .akun-row input[type="number"] {
+            flex: 2;
+        }
+        button {
+            padding: 15px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        .success {
+            color: #32CD32;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .error {
+            color: #FF0000;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #FFA500, #FF8C00);
+            padding: 15px 30px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        .input-btn {
+            color: #FFA500;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+        .input-btn:hover {
+            text-decoration: underline;
+        }
+        .purchase-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .purchase-row label {
+            flex: 1;
+            min-width: 120px;
+        }
+        .purchase-row select, .purchase-row input[type="number"] {
+            flex: 2;
+        }
+        .sales-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #FFF8DC;
+            border-radius: 8px;
+        }
+    </style>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.querySelector('.main-content');
+            sidebar.classList.toggle('closed');
+            mainContent.classList.toggle('sidebar-closed');
+        }
+
+        let debitCount = 1;
+        let kreditCount = 1;
+        let salesCount = 1;
+        let purchaseCount = 1;
+
+        function addDebitRow() {
+            debitCount++;
+            const container = document.getElementById('akun-container');
+            const row = document.createElement('div');
+            row.className = 'akun-row';
+            row.innerHTML = `
+                <label for="akun_debit_${debitCount}">Akun Debit ${debitCount}:</label>
+                <select id="akun_debit_${debitCount}" name="akun_debit_${debitCount}">
+                    <option value="">-- Pilih Akun --</option>
+                    {% for option in akun_options %}
+                    <option value="{{ option }}">{{ option }}</option>
+                    {% endfor %}
+                </select>
+                <label for="debit_${debitCount}">Debit ${debitCount}:</label>
+                <input type="number" id="debit_${debitCount}" name="debit_${debitCount}" placeholder="0" min="0" step="0.01">
+            `;
+            container.appendChild(row);
+        }
+
+        function addKreditRow() {
+            kreditCount++;
+            const container = document.getElementById('akun-container');
+            const row = document.createElement('div');
+            row.className = 'akun-row';
+            row.innerHTML = `
+                <label for="akun_kredit_${kreditCount}">Akun Kredit ${kreditCount}:</label>
+                <select id="akun_kredit_${kreditCount}" name="akun_kredit_${kreditCount}">
+                    <option value="">-- Pilih Akun --</option>
+                    {% for option in akun_options %}
+                    <option value="{{ option }}">{{ option }}</option>
+                    {% endfor %}
+                </select>
+                <label for="kredit_${kreditCount}">Kredit ${kreditCount}:</label>
+                <input type="number" id="kredit_${kreditCount}" name="kredit_${kreditCount}" placeholder="0" min="0" step="0.01">
+            `;
+            container.appendChild(row);
+        }
+
+        function toggleSalesSection() {
+            const jenisTransaksi = document.getElementById('jenis_transaksi').value;
+            const salesSection = document.getElementById('sales-section');
+            const purchaseSection = document.getElementById('purchase-section');
+            if (jenisTransaksi === 'Penjualan') {
+                salesSection.style.display = 'block';
+                purchaseSection.style.display = 'none';
+            } else if (jenisTransaksi === 'Pembelian') {
+                salesSection.style.display = 'none';
+                purchaseSection.style.display = 'block';
+            } else {
+                salesSection.style.display = 'none';
+                purchaseSection.style.display = 'none';
+            }
+        }
+
+        function addSalesRow() {
+            salesCount++;
+            const container = document.getElementById('sales-container');
+            const row = document.createElement('div');
+            row.className = 'sales-row';
+            row.innerHTML = `
+                <label for="product_${salesCount}">Pilih Produk yang Dijual ${salesCount}:</label>
+                <select id="product_${salesCount}" name="product_${salesCount}" onchange="updateSalesTotal(${salesCount})">
+                    <option value="">-- Pilih Produk --</option>
+                    {% for item in inventory_data %}
+                    <option value="{{ item.item_code }}" 
+                            data-cost="{{ item.cost_price }}" 
+                            data-selling="{{ item.selling_price }}"
+                            data-stock="{{ item.stock }}">
+                        {{ item.item_code }} - {{ item.name }} (Stok: {{ item.stock }})
+                    </option>
+                    {% endfor %}
+                </select>
+                <label for="quantity_${salesCount}">Jumlah ${salesCount}:</label>
+                <input type="number" id="quantity_${salesCount}" name="quantity_${salesCount}" placeholder="0" min="1" oninput="updateSalesTotal(${salesCount})">
+                <span id="sales_total_${salesCount}" style="margin-left: 10px; font-weight: bold;">Total Harga Jual: Rp 0 | Total HPP: Rp 0</span>
+            `;
+            container.appendChild(row);
+        }
+
+        function addPurchaseRow() {
+            purchaseCount++;
+            const container = document.getElementById('purchase-container');
+            const row = document.createElement('div');
+            row.className = 'purchase-row';
+            row.innerHTML = `
+                <label for="purchase_product_${purchaseCount}">Pilih Produk yang Dibeli ${purchaseCount}:</label>
+                <select id="purchase_product_${purchaseCount}" name="purchase_product_${purchaseCount}" onchange="updatePurchaseTotal(${purchaseCount})">
+                    <option value="">-- Pilih Produk --</option>
+                    {% for item in inventory_data %}
+                    <option value="{{ item.item_code }}" 
+                            data-cost="{{ item.cost_price }}"
+                            data-stock="{{ item.stock }}">
+                        {{ item.item_code }} - {{ item.name }} (Stok: {{ item.stock }})
+                    </option>
+                    {% endfor %}
+                </select>
+                <label for="purchase_quantity_${purchaseCount}">Jumlah ${purchaseCount}:</label>
+                <input type="number" id="purchase_quantity_${purchaseCount}" name="purchase_quantity_${purchaseCount}" placeholder="0" min="1" oninput="updatePurchaseTotal(${purchaseCount})">
+                <span id="purchase_total_${purchaseCount}" style="margin-left: 10px; font-weight: bold;">Total Harga: Rp 0</span>
+            `;
+            container.appendChild(row);
+        }
+
+        function updateSalesTotal(index) {
+            const productSelect = document.getElementById(`product_${index}`);
+            const quantityInput = document.getElementById(`quantity_${index}`);
+            const totalDisplay = document.getElementById(`sales_total_${index}`);
+
+            if (!productSelect || !quantityInput || !totalDisplay) return;
+
+            const selectedOption = productSelect.options[productSelect.selectedIndex];
+            const costPrice = parseFloat(selectedOption.dataset.cost) || 0;
+            const sellingPrice = parseFloat(selectedOption.dataset.selling) || 0;
+            const stock = parseInt(selectedOption.dataset.stock) || 0;
+            const quantity = parseFloat(quantityInput.value) || 0;
+
+            // Validasi stok
+            if (quantity > stock) {
+                alert(`Stok tidak mencukupi! Stok tersedia: ${stock}`);
+                quantityInput.value = stock;
+                return;
+            }
+
+            const totalCost = costPrice * quantity;
+            const totalSelling = sellingPrice * quantity;
+
+            totalDisplay.textContent = `Total Harga Jual: Rp ${totalSelling.toLocaleString('id-ID')} | Total HPP: Rp ${totalCost.toLocaleString('id-ID')}`;
+        }
+
+        function updatePurchaseTotal(index) {
+            const productSelect = document.getElementById(`purchase_product_${index}`);
+            const quantityInput = document.getElementById(`purchase_quantity_${index}`);
+            const totalDisplay = document.getElementById(`purchase_total_${index}`);
+
+            if (!productSelect || !quantityInput || !totalDisplay) return;
+
+            const costPrice = parseFloat(productSelect.options[productSelect.selectedIndex].dataset.cost) || 0;
+            const quantity = parseFloat(quantityInput.value) || 0;
+
+            const totalCost = costPrice * quantity;
+
+            totalDisplay.textContent = `Total Harga: Rp ${totalCost.toLocaleString('id-ID')}`;
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleSalesSection(); // Set initial state
+        });
+    </script>
+</head>
+<body>
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="BeeTheOne Logo">
+        </div>
+        <h2>Dashboard</h2>
+        <a href="/inventory" class="menu-item">
+            Inventory
+        </a>
+        <a href="/saldo_awal" class="menu-item">
+            Saldo Awal
+        </a>
+        <a href="/input_transaksi" class="menu-item">
+            Input Transaksi
+        </a>
+        <a href="/stock_card" class="menu-item">
+            Kartu Persediaan
+        </a>
+        <a href="/journal" class="menu-item">
+            Jurnal
+        </a>
+        <a href="/buku_besar" class="menu-item">
+            Buku Besar
+        </a>
+        <a href="/neraca_saldo" class="menu-item">
+            Neraca Saldo
+        </a>
+        <a href="/financial_reports" class="menu-item">
+            Laporan Keuangan
+        </a>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </div>
+    <div class="main-content">
+        <div class="container">
+            <div class="bee-icon">🐝</div>
+            <h1>Input Transaksi</h1>
+            
+            <!-- DEBUG SECTION -->
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ffeaa7;">
+                <h4 style="color: #856404; margin-top: 0;">Debug Info:</h4>
+                <p><strong>Jumlah produk di inventory:</strong> {{ inventory_data|length }}</p>
+                {% if inventory_data %}
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr style="background: #ffeaa7;">
+                                <th style="padding: 8px; border: 1px solid #ddd;">Item Code</th>
+                                <th style="padding: 8px; border: 1px solid #ddd;">Nama</th>
+                                <th style="padding: 8px; border: 1px solid #ddd;">HPP</th>
+                                <th style="padding: 8px; border: 1px solid #ddd;">Harga Jual</th>
+                                <th style="padding: 8px; border: 1px solid #ddd;">Stok</th>
+                            </tr>
+                            {% for item in inventory_data %}
+                            <tr>
+                                <td style="padding: 8px; border: 1px solid #ddd;">{{ item.item_code }}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">{{ item.name }}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">{{ item.cost_price }}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">{{ item.selling_price }}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">{{ item.stock }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% else %}
+                    <p style="color: #dc3545;"><strong>ERROR: Tidak ada data inventory!</strong></p>
+                {% endif %}
+            </div>
+            <!-- END DEBUG SECTION -->
+
+            <form method="POST">
+                <label for="jenis_transaksi">Jenis Transaksi:</label>
+                <select id="jenis_transaksi" name="jenis_transaksi" onchange="toggleSalesSection()" required>
+                    <option value="">-- Pilih Jenis Transaksi --</option>
+                    <option value="Pembelian" {% if request.form.get('jenis_transaksi') == 'Pembelian' %}selected{% endif %}>Pembelian</option>
+                    <option value="Penjualan" {% if request.form.get('jenis_transaksi') == 'Penjualan' %}selected{% endif %}>Penjualan</option>
+                    <option value="Lainnya" {% if request.form.get('jenis_transaksi') == 'Lainnya' %}selected{% endif %}>Transaksi Lainnya</option>
+                </select>
+
+                <div id="sales-section" style="display: none;">
+                    <h3>Detail Penjualan</h3>
+                    <div class="sales-container" id="sales-container">
+                        <div class="sales-row">
+                            <label for="product_1">Pilih Produk yang Dijual 1:</label>
+                            <select id="product_1" name="product_1" onchange="updateSalesTotal(1)">
+                                <option value="">-- Pilih Produk --</option>
+                                {% if inventory_data %}
+                                    {% for item in inventory_data %}
+                                    <option value="{{ item.item_code }}" 
+                                            data-cost="{{ item.cost_price }}" 
+                                            data-selling="{{ item.selling_price }}"
+                                            data-stock="{{ item.stock }}"
+                                            {% if request.form.get('product_1') == item.item_code %}selected{% endif %}>
+                                        {{ item.item_code }} - {{ item.name }} (Stok: {{ item.stock }})
+                                    </option>
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="">-- Data Inventory Kosong --</option>
+                                {% endif %}
+                            </select>
+                            <label for="quantity_1">Jumlah 1:</label>
+                            <input type="number" id="quantity_1" name="quantity_1" placeholder="0" min="1" value="{{ request.form.get('quantity_1', '') }}" oninput="updateSalesTotal(1)">
+                            <span id="sales_total_1" style="margin-left: 10px; font-weight: bold;">Total Harga Jual: Rp 0 | Total HPP: Rp 0</span>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addSalesRow()">Tambah Produk</button>
+                </div>
+
+                <div id="purchase-section" style="display: none;">
+                    <h3>Detail Pembelian</h3>
+                    <div class="purchase-container" id="purchase-container">
+                        <div class="purchase-row">
+                            <label for="purchase_product_1">Pilih Produk yang Dibeli 1:</label>
+                            <select id="purchase_product_1" name="purchase_product_1" onchange="updatePurchaseTotal(1)">
+                                <option value="">-- Pilih Produk --</option>
+                                {% if inventory_data %}
+                                    {% for item in inventory_data %}
+                                    <option value="{{ item.item_code }}" 
+                                            data-cost="{{ item.cost_price }}"
+                                            data-stock="{{ item.stock }}"
+                                            {% if request.form.get('purchase_product_1') == item.item_code %}selected{% endif %}>
+                                        {{ item.item_code }} - {{ item.name }} (Stok: {{ item.stock }})
+                                    </option>
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="">-- Data Inventory Kosong --</option>
+                                {% endif %}
+                            </select>
+                            <label for="purchase_quantity_1">Jumlah 1:</label>
+                            <input type="number" id="purchase_quantity_1" name="purchase_quantity_1" placeholder="0" min="1" value="{{ request.form.get('purchase_quantity_1', '') }}" oninput="updatePurchaseTotal(1)">
+                            <span id="purchase_total_1" style="margin-left: 10px; font-weight: bold;">Total Harga: Rp 0</span>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addPurchaseRow()">Tambah Produk</button>
+                </div>
+
+                <label for="tanggal">Tanggal Transaksi:</label>
+                <input type="date" id="tanggal" name="tanggal" required value="{{ request.form.get('tanggal', '') }}">
+
+                <label for="keterangan">Keterangan Transaksi:</label>
+                <input type="text" id="keterangan" name="keterangan" placeholder="Masukkan keterangan transaksi" required value="{{ request.form.get('keterangan', '') }}">
+
+                <div class="akun-container" id="akun-container">
+                    <div class="akun-row">
+                        <label for="akun_debit_1">Akun Debit 1:</label>
+                        <select id="akun_debit_1" name="akun_debit_1" required>
+                            <option value="">-- Pilih Akun --</option>
+                            {% for option in akun_options %}
+                            <option value="{{ option }}" {% if request.form.get('akun_debit_1') == option %}selected{% endif %}>{{ option }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="debit_1">Debit 1:</label>
+                        <input type="number" id="debit_1" name="debit_1" placeholder="0" min="0" step="0.01" value="{{ request.form.get('debit_1', '') }}">
+                    </div>
+                    <div class="akun-row">
+                        <label for="akun_kredit_1">Akun Kredit 1:</label>
+                        <select id="akun_kredit_1" name="akun_kredit_1" required>
+                            <option value="">-- Pilih Akun --</option>
+                            {% for option in akun_options %}
+                            <option value="{{ option }}" {% if request.form.get('akun_kredit_1') == option %}selected{% endif %}>{{ option }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="kredit_1">Kredit 1:</label>
+                        <input type="number" id="kredit_1" name="kredit_1" placeholder="0" min="0" step="0.01" value="{{ request.form.get('kredit_1', '') }}">
+                    </div>
+                </div>
+                <div class="add-buttons">
+                    <button type="button" onclick="addDebitRow()">Tambah Debit</button>
+                    <button type="button" onclick="addKreditRow()">Tambah Kredit</button>
+                </div>
+
+                <button type="submit">Simpan Transaksi</button>
+            </form>
+            {% if success %}
+            <p class="success">{{ success }}</p>
+            <p>
+                <a href="/inventory" class="input-btn">Lihat Inventory</a> 
+                <a href="/stock_card" class="input-btn">Lihat Kartu Persediaan</a>
+                <a href="/journal" class="input-btn">Lihat Jurnal</a>
+            </p>
+            {% endif %}
+            {% if error %}
+            <p class="error">{{ error }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <a href="/dashboard" class="back-btn">Kembali ke Dashboard</a>
+</body>
+</html>

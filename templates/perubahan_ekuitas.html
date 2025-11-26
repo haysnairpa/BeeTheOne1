@@ -1,0 +1,94 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Laporan Perubahan Ekuitas{% endblock %}
+
+{% block head_extra %}
+<link href="https://fonts.googleapis.com/css2?family=Roca+One:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+    body, .container {
+        font-family: 'Roca One', cursive;
+        font-weight: 700;
+    }
+    .container {
+        max-width: 700px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff8e1;
+        color: #4a3c00;
+        border-radius: 8px;
+        box-shadow: 0 0 10px #f2c94c88;
+        box-sizing: border-box;
+    }
+    h1 {
+        color: #f2c94c;
+        text-align: center;
+        margin-bottom: 30px;
+        text-shadow: 1px 1px 3px #bfa602;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        background-color: #fffbee;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 0 5px #f2c94c88;
+    }
+    th, td {
+        border: 1px solid #d2b94c;
+        padding: 10px 15px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2c94c;
+        color: #3a2f00;
+        font-weight: 600;
+        text-shadow: none;
+    }
+    tr:nth-child(even) {
+        background-color: #fff8cc;
+    }
+    td.nominal {
+        text-align: right;
+        font-family: 'Courier New', Courier, monospace;
+        color: #5a4b00;
+    }
+    .modal-akhir {
+        margin-top: 25px;
+        padding: 15px 20px;
+        background-color: #f2c94c;
+        color: #3a2f00;
+        font-weight: 700;
+        font-size: 1.1em;
+        border-radius: 6px;
+        box-shadow: 0 0 8px #bfa602cc;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Laporan Perubahan Ekuitas</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Keterangan</th>
+                <th>Nominal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in report_data %}
+            <tr>
+                <td>{{ item.keterangan }}</td>
+                <td class="nominal">{{ item.nominal | safe_currency }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="modal-akhir">
+        Modal Akhir: {{ modal_akhir | safe_currency }}
+    </div>
+</div>
+{% endblock %}

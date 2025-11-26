@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeeTheOne - Saldo Awal</title>
+    <style>
+        body {
+            font-family: 'Roca One';
+            font-weight: bold;
+            background: linear-gradient(135deg, #ffc400, #FFA500);
+            margin: 0;
+            padding: 0;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar {
+            width: 250px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        .sidebar.closed {
+            transform: translateX(-100%);
+        }
+        .toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1001;
+            font-size: 18px;
+        }
+        .main-content {
+            flex: 1;
+            padding: 50px;
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        .main-content.sidebar-closed {
+            margin-left: 0;
+        }
+        .logo {
+            margin-bottom: 20px;
+        }
+        .logo img {
+            width: 100px;
+            height: auto;
+        }
+        .bee-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+        }
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #FFA500, #FFD700);
+            color: #000;
+        }
+        .logout-btn {
+            margin-top: auto;
+            background: linear-gradient(135deg, #FFA500, #FF8C00);
+            padding: 15px 30px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .main-content h1 {
+            color: #FFD700;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .main-content p {
+            font-size: 20px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            font-weight: bold;
+        }
+        tr:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        .total-row {
+            font-weight: bold;
+        }
+        .total-row td:first-child {
+            text-align: center;
+        }
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #FFA500, #FF8C00);
+            padding: 15px 30px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.querySelector('.main-content');
+            sidebar.classList.toggle('closed');
+            mainContent.classList.toggle('sidebar-closed');
+        }
+    </script>
+</head>
+<body>
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="BeeTheOne Logo">
+        </div>
+        <h2>Dashboard</h2>
+        <!-- Removed Madu menu as requested -->
+        <!-- <a href="/honey" class="menu-item">
+            Madu
+        </a> -->
+        <a href="/inventory" class="menu-item">
+            Inventory
+        </a>
+        <a href="/saldo_awal" class="menu-item">
+            Saldo Awal
+        </a>
+        <a href="/input_transaksi" class="menu-item">
+            Input Transaksi
+        </a>
+        <a href="/stock_card" class="menu-item">
+            Kartu Persediaan
+        </a>
+        <a href="/journal" class="menu-item">
+            Jurnal
+        </a>
+        <a href="/buku_besar" class="menu-item">
+            Buku Besar
+        </a>
+        <a href="/neraca_saldo" class="menu-item">
+            Neraca Saldo
+        </a>
+        <a href="/financial_reports" class="menu-item">
+            Laporan Keuangan
+        </a>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </div>
+    <div class="main-content">
+        <h1>Saldo Awal</h1>
+        <!-- DEBUG INFO - Hapus setelah fix -->
+<div style="background: #e3f2fd; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 12px;">
+    <strong>Debug Info:</strong><br>
+    Data Count: {{ saldo_data|length }}<br>
+    Tahun: {{ tahun }}, Bulan: {{ bulan }}
+</div>
+
+{% if error %}
+<div style="background: #ffebee; color: #c62828; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #ffcdd2;">
+    <strong>Error:</strong> {{ error }}
+</div>
+{% endif %}
+        <div style="background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);">
+            <form method="GET" action="/saldo_awal" style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+                <label for="tahun" style="font-weight: bold; color: #333;">Tahun:</label>
+                <select name="tahun" id="tahun" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+                    <option value="2020" {% if tahun == '2020' %}selected{% endif %}>2020</option>
+                    <option value="2021" {% if tahun == '2021' %}selected{% endif %}>2021</option>
+                    <option value="2022" {% if tahun == '2022' %}selected{% endif %}>2022</option>
+                    <option value="2023" {% if tahun == '2023' %}selected{% endif %}>2023</option>
+                    <option value="2024" {% if tahun == '2024' %}selected{% endif %}>2024</option>
+                    <option value="2025" {% if tahun == '2025' %}selected{% endif %}>2025</option>
+                </select>
+                <label for="bulan" style="font-weight: bold; color: #333;">Bulan:</label>
+                <select name="bulan" id="bulan" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+                    <option value="Januari" {% if bulan == 'Januari' %}selected{% endif %}>Januari</option>
+                    <option value="Februari" {% if bulan == 'Februari' %}selected{% endif %}>Februari</option>
+                    <option value="Maret" {% if bulan == 'Maret' %}selected{% endif %}>Maret</option>
+                    <option value="April" {% if bulan == 'April' %}selected{% endif %}>April</option>
+                    <option value="Mei" {% if bulan == 'Mei' %}selected{% endif %}>Mei</option>
+                    <option value="Juni" {% if bulan == 'Juni' %}selected{% endif %}>Juni</option>
+                    <option value="Juli" {% if bulan == 'Juli' %}selected{% endif %}>Juli</option>
+                    <option value="Agustus" {% if bulan == 'Agustus' %}selected{% endif %}>Agustus</option>
+                    <option value="September" {% if bulan == 'September' %}selected{% endif %}>September</option>
+                    <option value="Oktober" {% if bulan == 'Oktober' %}selected{% endif %}>Oktober</option>
+                    <option value="November" {% if bulan == 'November' %}selected{% endif %}>November</option>
+                    <option value="Desember" {% if bulan == 'Desember' %}selected{% endif %}>Desember</option>
+                </select>
+                <button type="submit" style="padding: 8px 15px; background: linear-gradient(135deg, #FFD700, #FFA500); border: none; border-radius: 5px; color: #000; font-weight: bold; cursor: pointer;">Tampilkan</button>
+            </form>
+        </div>
+        <p>Saldo Awal untuk {{ bulan }} {{ tahun }}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>No Akun</th>
+                    <th>Nama Akun</th>
+                    <th>Side</th>
+                    <th>Debit</th>
+                    <th>Kredit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in saldo_data %}
+                <tr class="{% if item.is_total %}total-row{% endif %}">
+                    <td>{{ item.no_akun }}</td>
+                    <td>{{ item.nama_akun }}</td>
+                    <td>{{ item.side }}</td>
+                    <td>{{ item.debit }}</td>
+                    <td>{{ item.kredit }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/dashboard" class="back-btn">Kembali ke Dashboard</a>
+    </div>
+</body>
+</html>

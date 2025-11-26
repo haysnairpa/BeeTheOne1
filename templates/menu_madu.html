@@ -1,0 +1,65 @@
+{% extends "base_layout.html" %}  
+
+{% block title %}Menu Madu{% endblock %}
+
+{% block head_extra %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border: 3px solid #B8860B; /* honey gold border */
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(184, 134, 11, 0.4);
+        background: #fff8dc; /* light honey color background */
+    }
+    thead tr {
+        background-color: #B8860B; /* honey gold */
+        color: white;
+        font-weight: bold;
+        font-family: 'Roca One', cursive;
+        font-size: 1.2em;
+        user-select: none;
+    }
+    th, td {
+        padding: 14px 18px;
+        text-align: left;
+        border-bottom: 1px solid #daa520; /* medium honey color border */
+        font-weight: 600;
+    }
+    tbody tr:hover {
+        background-color: #ffefb3; /* subtle honey yellow highlight on hover */
+        cursor: pointer;
+    }
+    tbody tr:last-child td {
+        border-bottom: none;
+    }
+    .harga-jual {
+        font-weight: 700;
+        color: #a0522d; /* dark honey brown for price text */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1>Menu Madu</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>No Item</th>
+                <th>Jenis Madu</th>
+                <th>Harga Jual</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in menu_items %}
+            <tr>
+                <td>{{ item.no_item }}</td>
+                <td>{{ item.jenis_madu }}</td>
+                <td class="harga-jual">Rp {{ "{:,.0f}".format(item.harga_jual).replace(",", ".") }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

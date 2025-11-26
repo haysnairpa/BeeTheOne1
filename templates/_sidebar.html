@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<!-- Partial template: _sidebar.html -->
+<style>
+    .sidebar {
+        width: 250px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: fixed;
+        height: 100vh;
+        left: 0;
+        top: 0;
+        transition: transform 0.3s ease;
+        z-index: 1000;
+    }
+    .sidebar.closed {
+        transform: translateX(-100%);
+    }
+    .toggle-btn {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #FFD700, #FFA500);
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 1001;
+        font-size: 18px;
+    }
+    .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        margin-bottom: 8px;
+        background: linear-gradient(135deg, #FFD700, #FFA500);
+        color: #000;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    .menu-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        background: linear-gradient(135deg, #FFA500, #FFD700);
+        color: #000;
+    }
+    .logout-btn {
+        margin-top: auto;
+        background: linear-gradient(135deg, #FFA500, #FF8C00);
+        padding: 15px 30px;
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .logout-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+</style>
+<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+<div class="sidebar" id="sidebar">
+    <div class="logo">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="BeeTheOne Logo">
+    </div>
+    <h2>Dashboard</h2>
+    <!-- Removed Madu menu as requested -->
+    <a href="/menu_madu" class="menu-item">
+        Menu Madu
+        
+    </a>
+    <!-- Inventory menu removed as per request -->
+    <a href="/saldo_awal" class="menu-item">
+        Saldo Awal
+    </a>
+    <a href="/input_transaksi" class="menu-item">
+        Input Transaksi
+    </a>
+    <a href="/stock_card" class="menu-item">
+        Kartu Persediaan
+    </a>
+    <a href="/journal" class="menu-item">
+        Jurnal
+    </a>
+    <a href="/buku_besar" class="menu-item">
+        Buku Besar
+    </a>
+    <a href="/neraca_saldo" class="menu-item">
+        Neraca Saldo
+    </a>
+    <a href="/financial_reports" class="menu-item">
+        Laporan Keuangan
+    </a>
+    <a href="/laporan_perubahan_ekuitas" class="menu-item">
+        Perubahan Ekuitas
+    </a>
+    <a href="/logout" class="logout-btn">Logout</a>
+</div>
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.querySelector('.main-content');
+        sidebar.classList.toggle('closed');
+        mainContent.classList.toggle('sidebar-closed');
+    }
+</script>
