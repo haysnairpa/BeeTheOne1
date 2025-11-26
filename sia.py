@@ -1215,46 +1215,49 @@ def load_neraca_saldo_data(tahun=None, bulan=None):
     opening = _load_opening_balances()
     journal_entries = load_journal_entries(tahun, bulan)
 
+    # Build saldo per akun based on opening balances and journal entries,
+    # using the same net-saldo logic as buku_besar (debit - kredit).
     saldo_per_akun = {}
 
     for no_akun, acc in opening.items():
+        nama_akun = acc['nama_akun']
+        saldo_awal = (acc['debit'] or 0.0) - (acc['kredit'] or 0.0)
         saldo_per_akun[no_akun] = {
             'no_akun': no_akun,
-            'nama_akun': acc['nama_akun'],
-            'debit': acc['debit'],
-            'kredit': acc['kredit'],
+            'nama_akun': nama_akun,
+            'saldo': saldo_awal,
         }
 
     for entry in journal_entries:
         no_akun = entry['no_akun']
         nama_akun = entry['nama_akun']
-        debit = entry['debit']
-        kredit = entry['kredit']
+        debit = entry['debit'] or 0.0
+        kredit = entry['kredit'] or 0.0
         if no_akun not in saldo_per_akun:
             saldo_per_akun[no_akun] = {
                 'no_akun': no_akun,
                 'nama_akun': nama_akun,
-                'debit': 0.0,
-                'kredit': 0.0,
+                'saldo': 0.0,
             }
-        saldo_per_akun[no_akun]['debit'] += debit
-        saldo_per_akun[no_akun]['kredit'] += kredit
+        saldo_per_akun[no_akun]['saldo'] += debit - kredit
 
     saldo_data = []
     total_debit = 0.0
     total_kredit = 0.0
 
     for acc in saldo_per_akun.values():
-        debit_amount = acc['debit'] or 0.0
-        kredit_amount = acc['kredit'] or 0.0
-        if debit_amount == 0 and kredit_amount == 0:
+        saldo = acc.get('saldo', 0.0) or 0.0
+        if saldo == 0:
             continue
-        if debit_amount > kredit_amount:
+
+        if saldo > 0:
             side = 'Debit'
-        elif kredit_amount > debit_amount:
-            side = 'Kredit'
+            debit_amount = saldo
+            kredit_amount = 0.0
         else:
-            side = 'Debit'
+            side = 'Kredit'
+            debit_amount = 0.0
+            kredit_amount = -saldo
 
         saldo_data.append({
             'no_akun': acc['no_akun'],
